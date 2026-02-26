@@ -1,93 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CBSE Board Percentage Calculator</title>
+    <meta charset="UTF-8">
+    <title>CBSE Best 5 Percentage Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f6f9;
-            padding: 20px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff, #ff758c);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
         }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input {
-            width: 60px;
-            padding: 5px;
-            margin: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            margin-top: 15px;
-            background-color: #007bff;
+
+        h1 {
             color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .calculator {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            width: 350px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 2px solid #0072ff;
+            font-size: 15px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 10px;
             border: none;
-            border-radius: 5px;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
         }
+
         button:hover {
-            background-color: #0056b3;
+            transform: scale(1.07);
         }
-        h2 {
-            margin-bottom: 5px;
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #0072ff;
+        }
+
+        .images {
+            margin-top: 30px;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .einstein {
+            width: 150px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .newton {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            margin-top: 40px;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>CBSE Board Percentage Calculator</h2>
-    <p>Enter marks for 6 subjects (Best 5 will be calculated)</p>
+<h1>CBSE Best 5 Percentage Calculator</h1>
 
-    <div id="subjects"></div>
+<div class="calculator">
+    <input type="number" placeholder="Subject 1" id="s1" min="0" max="100">
+    <input type="number" placeholder="Subject 2" id="s2" min="0" max="100">
+    <input type="number" placeholder="Subject 3" id="s3" min="0" max="100">
+    <input type="number" placeholder="Subject 4" id="s4" min="0" max="100">
+    <input type="number" placeholder="Subject 5" id="s5" min="0" max="100">
+    <input type="number" placeholder="Subject 6" id="s6" min="0" max="100">
 
-    <button onclick="calculate()">Calculate Percentage</button>
+    <button onclick="calculate()">Calculate Best 5</button>
 
-    <h3 id="result"></h3>
+    <div id="result"></div>
 </div>
 
+<div class="images">
+    <img src="einstein.png" class="einstein" alt="Einstein">
+    <img src="newton.png" class="newton" alt="Newton">
+</div>
+
+<footer>
+    Study Smart 🚀
+</footer>
+
 <script>
-    const subjectsDiv = document.getElementById("subjects");
+function calculate() {
+    let marks = [
+        Number(document.getElementById("s1").value),
+        Number(document.getElementById("s2").value),
+        Number(document.getElementById("s3").value),
+        Number(document.getElementById("s4").value),
+        Number(document.getElementById("s5").value),
+        Number(document.getElementById("s6").value)
+    ];
 
-    for (let i = 1; i <= 6; i++) {
-        subjectsDiv.innerHTML += `
-            <h4>Subject ${i}</h4>
-            Internal (20): <input type="number" min="0" max="20" id="int${i}">
-            Exam (80): <input type="number" min="0" max="80" id="ext${i}">
-            <br>
-        `;
+    if (marks.some(m => isNaN(m) || m < 0 || m > 100)) {
+        alert("Enter valid marks (0-100) in all subjects!");
+        return;
     }
 
-    function calculate() {
-        let totals = [];
+    marks.sort((a, b) => b - a);  // Sort descending
+    let bestFive = marks.slice(0, 5);
+    let total = bestFive.reduce((sum, m) => sum + m, 0);
+    let percentage = (total / 500) * 100;
 
-        for (let i = 1; i <= 6; i++) {
-            let internal = parseFloat(document.getElementById(`int${i}`).value) || 0;
-            let exam = parseFloat(document.getElementById(`ext${i}`).value) || 0;
-
-            if (internal > 20 || exam > 80) {
-                alert("Please enter valid marks!");
-                return;
-            }
-
-            totals.push(internal + exam);
-        }
-
-        totals.sort((a, b) => b - a);
-        let bestFive = totals.slice(0, 5);
-
-        let sum = bestFive.reduce((a, b) => a + b, 0);
-        let percentage = (sum / 500) * 100;
-
-        document.getElementById("result").innerHTML =
-            `Best 5 Total: ${sum}/500 <br> Percentage: ${percentage.toFixed(2)}%`;
-    }
+    document.getElementById("result").innerHTML =
+        "Best 5 Total: " + total + "/500 <br>" +
+        "Percentage: " + percentage.toFixed(2) + "%";
+}
 </script>
 
 </body>
