@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CBSE Board Percentage Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f6f9;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 60px;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>CBSE Board Percentage Calculator</h2>
+    <p>Enter marks for 6 subjects (Best 5 will be calculated)</p>
+
+    <div id="subjects"></div>
+
+    <button onclick="calculate()">Calculate Percentage</button>
+
+    <h3 id="result"></h3>
+</div>
+
+<script>
+    const subjectsDiv = document.getElementById("subjects");
+
+    for (let i = 1; i <= 6; i++) {
+        subjectsDiv.innerHTML += `
+            <h4>Subject ${i}</h4>
+            Internal (20): <input type="number" min="0" max="20" id="int${i}">
+            Exam (80): <input type="number" min="0" max="80" id="ext${i}">
+            <br>
+        `;
+    }
+
+    function calculate() {
+        let totals = [];
+
+        for (let i = 1; i <= 6; i++) {
+            let internal = parseFloat(document.getElementById(`int${i}`).value) || 0;
+            let exam = parseFloat(document.getElementById(`ext${i}`).value) || 0;
+
+            if (internal > 20 || exam > 80) {
+                alert("Please enter valid marks!");
+                return;
+            }
+
+            totals.push(internal + exam);
+        }
+
+        totals.sort((a, b) => b - a);
+        let bestFive = totals.slice(0, 5);
+
+        let sum = bestFive.reduce((a, b) => a + b, 0);
+        let percentage = (sum / 500) * 100;
+
+        document.getElementById("result").innerHTML =
+            `Best 5 Total: ${sum}/500 <br> Percentage: ${percentage.toFixed(2)}%`;
+    }
+</script>
+
+</body>
+</html>
